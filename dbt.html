@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>cheat sheet dbt</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href='resources/bootstrap.min.css'>
+    <link rel="stylesheet" href='resources/styles.css'>
+    <script src='resources/html5.js'></script>
+    <script src='resources/respond.min.js'></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <!--  <h1>DBT commands</h1>  -->
+                <p>
+                    <b>
+                        DBT commands:
+                    </b>
+                </p>
+                <p>
+                    execute all dbt transformations:<br>
+                    dbt run
+                </p>
+                <p>
+                    execute dbt run only on a specific model:<br>
+                    dbt run -s dim_selectedmodel
+                </p>
+                <p>
+                    execute dbt run only on a specific model (old version):<br>
+                    dbt run -m dim_selectedmodel
+                </p>
+                <p>
+                    create the complete documentation of the project:<br>
+                    dbt docs generate
+                </p>
+                <p>
+                    install the dependencies in packages.yml:<br>
+                    dbt deps
+                </p>
+                <p>
+                    <b>
+                        Templating:
+                    </b>
+                </p>
+                <p>
+                    override the materialization status of a model in the sql-file:
+                </p>
+                <p>
+                <pre>
+{{ config(
+    materialized="table"
+)}}
+</pre>
+                </p>
+                <p>
+                    Reference other models:
+                </p>
+                <p>
+                <pre>
+select * from {{ ref('stg_stagedentity') }}
+</pre>
+                </p>
+                <p>
+                    Reference source data:
+                </p>
+                <pre>
+{{ source('source_1', 'table_2_from_source_1') }}
+</pre>
+                <p>
+                    <b>
+                        YAML files:
+                    </b>
+                </p>
+                <p>
+                    <i>list of important yaml-files:</i><br>
+                    dbt_project.yml: main project yaml<br>
+
+                </p>
+                <p>
+                    dbt_project.yml template:
+                </p>
+                <p>
+                <pre>
+# Project names should contain only lowercase characters and underscores
+name: "my_dbt_analytics"
+version: "1.0.0"
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: "dbt_analytics_profile"
+
+# configuration for creating models
+models:
+my_dbt_analytics:
+    +pre-hook:
+     - "set timezone='Europe/Berlin'"
+    marts:
+      +materialized: table
+    staging:
+      +materialized: view
+</pre>
+                </p>
+                <p>
+                    Yaml file for a source:
+                </p>
+                <pre>
+version: 2
+
+sources:
+  - name: source_1
+    description: This is the first of many more sources used in this project
+    schema: raw
+    tables:
+      - name: table_1_from_source_2
+        description: This table contains the raw data about something
+        loaded_at_field: _etl_loaded_at
+        freshness:
+          warn_after: {count: 1, period: day}
+          error_after: {count: 3, period: day}
+      - name: table_2_from_source_2
+        columns: 
+          - name: date_col
+            tests:
+              - unique
+              ...
+</pre>
+                <p>
+                <p>
+                    Remark: every particular source should be stored in its dedicated subfolder under the staging folder
+                    and the yaml in that folder should be named "src_thisparticularsource.yml"
+                </p>
+                <p>
+                    Yaml file for generic tests on staging level:<br>
+                <pre>
+# Names and tests for all staging models based on source_1
+version: 2
+
+models: 
+  - name: stg_entity1
+    columns: 
+      - name: ent1_id
+        tests:
+          - unique
+          - not_null
+  - name: stg_entity2
+    columns:
+      - name: ent2_status_column
+        tests:
+          - accepted_values:
+              values:
+                - val1
+                - val2
+</pre>
+                </p>
+                <p>
+                    The name of that Yaml file would be stg_source_1.yml and it would be placed in the
+                    models/staging/source_1/ folder.
+                </p>
+                </p>
+                <p>
+                    Referencing a doc block from a field description:<br>
+                <pre>
+models:
+  - name: bla
+    columns:
+      - name: status
+        description: '{{ doc("status_field") }}'
+</pre>
+                </p>
+                <p>
+                    Doc block markdown file:
+                </p>
+                <pre>
+{% docs status_field %}
+
+The status can be one of the following values:
+
+| status        | definition          |
+|-------------------------------------|
+| placed        | order was placed    |
+| accepted      | order was accepted  |
+| rejected      | order was rejected  |
+
+{% enddocs %}
+</pre>
+                <p>
+                    the packages.yml file: <br>
+                </p>
+<pre>
+packages:
+  # this package is installed via hub.getdbt.com
+  - package: dbt-labs/dbt_utils
+    version: 0.8.6
+  # this way it is installed via github directly (current main)
+  - git: https://github.com/dbt-labs/dbt-utils
+    revision: main
+  # or via a local copy; in the local folder there must be a dbt_project.yml
+  - local: local_folder_within_dbt_project
+</pre>
+                <b>
+                    General issues:
+                </b>
+                </p>
+                <p>
+                    types of models: (DBT terminology)<br>
+                    <i>Sources</i> - immediate copies of raw data sources (src_model_)<br>
+                    <i>Staging models</i> - light weight transformations on the basis of sources (stg_model_)<br>
+                    <i>Intermediate models</i> - in between staging and final models (dimensions and facts)<br>
+                    <i>Dimension models</i> - static entity models (dim_model_)<br>
+                    <i>Fact models</i> - models for event-like types (fct_model_)<br>
+                </p>
+                <p>
+                    Terminology for tests:<br>
+                    <i>Singular tests</i>: written particularly for specific tables<br>
+                    <i>Generic tests</i>:
+                <ul>
+                    <li>Unique</li>
+                    <li>Not null</li>
+                    <li>Accepted values</li>
+                    <li>Relationships</li>
+                </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

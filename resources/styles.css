@@ -1,0 +1,53 @@
+/*------------------------------------*\
+	#OVERRIDE STLES
+	This style sheet can be used for two different functions:
+	1. Override specific Bootstrap styles.
+	2. Add your own styles.
+\*------------------------------------*/
+
+/**
+ * Padding-top is required if using .navbar-fixed-top.
+ * This can be removed Remove if using .navbar-static-top.
+ * The height may need to be changed if the height of you
+ * navigation changes.
+*/
+
+body { padding-top: 40px; }
+
+
+
+/**
+ * Bootstrap requires a containing element to wrap site contents 
+ * and house the grid system. You may choose one of two containers.
+ * Use .container for a responsive fixed width container.
+ * Use .container-fluid for a full width container.
+
+ * If using container-fluid, you may need to set a maximum width, 
+ * so that the container will not spread to the entire viewport.
+*/
+
+.container-fluid { max-width: 1200px; }
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 25px;
+}
+
+h3 {
+  font-size: 22px;
+}
+
+pre {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	text-align: justify;
+}
+
+td img{
+	display: table-cell;
+    margin-left: auto;
+    margin-right: auto;
+}

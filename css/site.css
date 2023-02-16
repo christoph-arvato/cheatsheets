@@ -1,0 +1,29 @@
+/* 
+    Created on : 17.11.2017, 06:48:35
+    Author     : Christoph Schulz
+*/
+div.margin_
+{
+margin-top:0cm;
+margin-right:3cm;
+margin-bottom:10.0pt;
+margin-left:3cm;
+}
+h1 {
+ font-family: Book Antiqua;
+ font-size: x-large;
+ text-align: left;
+ color: #AA00AA;
+}
+h1.custom {
+ font-family: Book Antiqua;
+ font-size: medium;
+ text-align: left;
+ color: #AA00AA;
+}
+body {
+ font-family: Book Antiqua;
+ font-size: medium;
+ text-align: justify;
+ color: #222222;
+}
