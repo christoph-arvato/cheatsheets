@@ -80,6 +80,35 @@
                     virtuelle Umgebung deaktivieren:<br>
                     deactivate
                 </p>
+                <p>
+                    <b>
+                        dbt-Befehle:
+                    </b>
+                </p>
+                <p>
+                    Aktivieren der DBT-Umgebung, aus dem Ordner git-repos heraus ausführen:<br>
+                    DBTEnv_\Scripts\activate
+                </p>
+                <p>
+                    Ausgabe der aktiven DBT-Version:<br>
+                    dbt --version
+                </p>
+                <p>
+                    alle Transformationen ausführen:<br>
+                    dbt run
+                </p>
+                <p>
+                    execute dbt run only on a specific model:<br>
+                    dbt run -s dim_selectedmodel
+                </p>
+                <p>
+                    create the complete documentation of the project:<br>
+                    dbt docs generate
+                </p>
+                <p>
+                    embedded dbt-Webserver starten, um sich den Datenkatalog anzeigen zu lassen:<br>
+                    dbt docs serve
+                </p>
             </div>
         </div>
     </div>
