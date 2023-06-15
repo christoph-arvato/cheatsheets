@@ -26,7 +26,28 @@
                 </p>
                 <p>
                     execute dbt run only on a specific model:<br>
-                    dbt run -s dim_selectedmodel
+                    dbt run -s dim_selectedmodel or dbt run --select dim_selectedmodel
+                    Example: For a model example.sql the executed command should be <strong>dbt run -s example</strong>
+                </p>
+                <p>
+                    connect dbt to a target platform
+                    dbt debug
+                </p>
+                <p>
+                    execute all tests yml files along the DAG.
+                    dbt test
+                </p>
+                <p>
+                    execute generic test for a downstream model
+                    dbt test --select dim_selectedmodel
+                </p>
+                <p>
+                    execute generic test on source model
+                    dbt test --select source:dim_sourcemodel
+                </p>
+                <p>
+                    run and test model accross the DAG
+                    dbt build
                 </p>
                 <p>
                     execute dbt run only on a specific model (old version):<br>
@@ -46,7 +67,7 @@
                     </b>
                 </p>
                 <p>
-                    override the materialization status of a model in the sql-file:
+                    override the materialization status of a model in the sql-file. Insert the code snipet of the sql-file.
                 </p>
                 <p>
                 <pre>
@@ -92,7 +113,7 @@ config-version: 2
 # This setting configures which "profile" dbt uses for this project.
 profile: "dbt_analytics_profile"
 
-# configuration for creating models
+# configuration for creating models. By default models are materialized as <b>views.</b>
 models:
 my_dbt_analytics:
     +pre-hook:
@@ -105,6 +126,7 @@ my_dbt_analytics:
                 </p>
                 <p>
                     Yaml file for a source:
+                    If the schema is not specified dbt will connect to the first schema it meets on the platform.
                 </p>
                 <pre>
 version: 2
@@ -214,8 +236,10 @@ packages:
                 </p>
                 <p>
                     Terminology for tests:<br>
-                    <i>Singular tests</i>: written particularly for specific tables<br>
-                    <i>Generic tests</i>:
+                    <i>Singular tests</i>: sql-file to be saved in the <b>tests</b> directory of the project.<br>
+                    This test is written particularly for specific models.
+                    <i>Generic tests</i>: yml file(s) used to test <b>sources</b> or models along the DAG.<br> These files 
+                    should be saved the directory where the target models are. Models can be tested against the following properties.
                 <ul>
                     <li>Unique</li>
                     <li>Not null</li>
